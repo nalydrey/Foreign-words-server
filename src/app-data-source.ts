@@ -3,6 +3,7 @@ import {config} from 'dotenv'
 import { User } from "./entity/user.entity"
 import { Word } from "./entity/words.entity"
 import { Metadata } from "./entity/metadata.entity"
+import { Setting } from "./entity/settings"
 config()
 
 
@@ -13,7 +14,7 @@ export const myDataSource = new DataSource({
     username:  process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    entities: [User, Word, Metadata], 
+    entities: [User, Word, Metadata, Setting], 
     logging: true,
     synchronize: true,
 })

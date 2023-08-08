@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinTable } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinTable, OneToOne, JoinColumn } from "typeorm"
 import { Word } from "./words.entity"
+import { Setting } from "./settings"
 
 @Entity()
 export class User {
@@ -8,13 +9,16 @@ export class User {
 
     @Column()
     nikName: string 
-
-    @Column()
-    email: string 
+    
+    @Column({default: 'user'})
+    role: 'user' | 'admin' 
     
     @Column()
     password: string 
 
     @OneToMany(()=> Word, (word) => word.user)
     words: Word[]
+  
+    @OneToOne( () => Setting, (settings)=> settings.user, {eager: true})
+    settings: Setting
 }

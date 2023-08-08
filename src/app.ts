@@ -1,5 +1,6 @@
 import express, {Request, Response} from "express"
 import { myDataSource } from "./app-data-source"
+import cors from 'cors'
 import rootRoute from "./route/index.route"
 
 
@@ -20,14 +21,9 @@ const funk = () => {
 }
 
 const app = express()
+app.use(cors())
 app.use(express.json())
 app.use('/api', rootRoute)
-
-
-
-
-
-
 
 
 funk()

@@ -16,11 +16,19 @@ export class Metadata {
         default: 0
     })
     properlyCounter: number
-
+    
     @Column({
-        default: null
+        default: true
     })
-    category: string | null
+    needsToLearn: boolean
+    
+    @Column({
+        default: true
+    })
+    isNew: boolean
+
+    @Column()
+    category: string
 
     @OneToOne(type => Word, word => word.meta, {onDelete: "CASCADE"})
     @JoinColumn()
