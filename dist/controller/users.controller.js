@@ -174,7 +174,7 @@ var enterUser = function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 user = _b.sent();
                 _b.label = 3;
             case 3:
-                console.log(user);
+                console.log('user', user);
                 res.send({ user: user });
                 return [3 /*break*/, 5];
             case 4:

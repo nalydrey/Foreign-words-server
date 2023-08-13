@@ -84,7 +84,7 @@ export const enterUser = async (req: Request, res: Response) => {
             user = await usersRepo.findOneBy({nikName, password})
         }
 
-        console.log(user);
+        console.log('user',user);
         
         res.send({user})
         
