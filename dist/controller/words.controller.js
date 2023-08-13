@@ -95,32 +95,43 @@ var createWord = function (req, res) { return __awaiter(void 0, void 0, void 0, 
 }); };
 exports.createWord = createWord;
 var editWord = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, _a, foreignText, translatedText, category, wordsRepo, word, error_2;
+    var id, _a, foreignText, translatedText, category, wordsRepo, metaRepo, word, metadata, updatedWord, error_2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 console.log('editWord');
                 _b.label = 1;
             case 1:
-                _b.trys.push([1, 4, , 5]);
+                _b.trys.push([1, 7, , 8]);
                 id = +req.params.id;
                 _a = req.body, foreignText = _a.foreignText, translatedText = _a.translatedText, category = _a.category;
                 wordsRepo = app_data_source_1.myDataSource.getRepository(words_entity_1.Word);
+                metaRepo = app_data_source_1.myDataSource.getRepository(metadata_entity_1.Metadata);
                 return [4 /*yield*/, wordsRepo.findOneBy({ id: id })];
             case 2:
                 word = _b.sent();
                 word.foreignText = foreignText || word.foreignText;
                 word.translatedText = translatedText || word.translatedText;
-                return [4 /*yield*/, wordsRepo.save(word)];
+                return [4 /*yield*/, metaRepo.findOneBy({ id: word.id })];
             case 3:
-                _b.sent();
-                res.send({ word: word });
-                return [3 /*break*/, 5];
+                metadata = _b.sent();
+                metadata.category = category;
+                return [4 /*yield*/, wordsRepo.save(word)];
             case 4:
+                _b.sent();
+                return [4 /*yield*/, metaRepo.save(metadata)];
+            case 5:
+                _b.sent();
+                return [4 /*yield*/, wordsRepo.findOneBy({ id: id })];
+            case 6:
+                updatedWord = _b.sent();
+                res.send({ word: updatedWord });
+                return [3 /*break*/, 8];
+            case 7:
                 error_2 = _b.sent();
                 console.log('editWord func error!', error_2);
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
+                return [3 /*break*/, 8];
+            case 8: return [2 /*return*/];
         }
     });
 }); };

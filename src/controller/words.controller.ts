@@ -44,13 +44,21 @@ export const editWord = async (req: Request, res: Response) => {
        const {foreignText, translatedText, category} = req.body
  
        const wordsRepo = myDataSource.getRepository(Word)
+       const metaRepo = myDataSource.getRepository(Metadata)
        const word = await wordsRepo.findOneBy({id})
        word.foreignText = foreignText || word.foreignText
        word.translatedText = translatedText || word.translatedText
 
-       await wordsRepo.save(word)
+       const metadata = await metaRepo.findOneBy({id: word.id})
+       
+       metadata.category = category
 
-        res.send({word})
+       await wordsRepo.save(word)
+       await metaRepo.save(metadata)
+
+       const updatedWord = await wordsRepo.findOneBy({id})
+
+        res.send({word: updatedWord})
         
     } catch (error) {
         console.log('editWord func error!', error)
