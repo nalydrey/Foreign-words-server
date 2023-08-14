@@ -5,7 +5,7 @@ import rootRoute from "./route/index.route"
 
 
 const PORT = process.env.APP_PORT
-
+console.log("in app")
 const funk = () => {
     myDataSource
         .initialize()
