@@ -8,6 +8,7 @@ var app_data_source_1 = require("./app-data-source");
 var cors_1 = __importDefault(require("cors"));
 var index_route_1 = __importDefault(require("./route/index.route"));
 var PORT = process.env.APP_PORT;
+console.log("in app");
 var funk = function () {
     app_data_source_1.myDataSource
         .initialize()

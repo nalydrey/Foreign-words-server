@@ -15,7 +15,7 @@ export class Setting {
 
     @Column({default: 20})
     repeatBy: number
-   
+    
     @Column({default: 10})
     learnBy: number
 
