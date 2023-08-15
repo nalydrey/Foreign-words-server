@@ -6,6 +6,7 @@ var route = (0, express_1.Router)();
 route.get('/', users_controller_1.getUsers);
 route.get('/login', users_controller_1.enterUser);
 route.get('/user/:id', users_controller_1.getUser);
+route.put('/settings/:id', users_controller_1.changeSettings);
 route.post('/', users_controller_1.createUser);
 route.delete('/:id', users_controller_1.deleteUser);
 route.delete('/', users_controller_1.deleteAllUsers);

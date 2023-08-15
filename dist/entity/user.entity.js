@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 var typeorm_1 = require("typeorm");
 var words_entity_1 = require("./words.entity");
-var settings_1 = require("./settings");
+var settings_entity_1 = require("./settings.entity");
 var User = exports.User = /** @class */ (function () {
     function User() {
     }
@@ -37,8 +37,8 @@ var User = exports.User = /** @class */ (function () {
         __metadata("design:type", Array)
     ], User.prototype, "words", void 0);
     __decorate([
-        (0, typeorm_1.OneToOne)(function () { return settings_1.Setting; }, function (settings) { return settings.user; }, { eager: true }),
-        __metadata("design:type", settings_1.Setting)
+        (0, typeorm_1.OneToOne)(function () { return settings_entity_1.Setting; }, function (settings) { return settings.user; }, { eager: true }),
+        __metadata("design:type", settings_entity_1.Setting)
     ], User.prototype, "settings", void 0);
     User = __decorate([
         (0, typeorm_1.Entity)()

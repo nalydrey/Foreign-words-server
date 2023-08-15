@@ -53,6 +53,7 @@ var words_entity_1 = require("../entity/words.entity");
 var user_entity_1 = require("../entity/user.entity");
 var metadata_entity_1 = require("../entity/metadata.entity");
 var queryParser_1 = require("../functions/queryParser");
+var meta_entity_controller_1 = require("../entity-controller/meta.entity.controller");
 var createWord = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, userId, foreignText, translatedText, category, word, metadata, usersRepo, wordsRepo, metadataRepo, foundUser, error_1;
     return __generator(this, function (_b) {
@@ -95,7 +96,7 @@ var createWord = function (req, res) { return __awaiter(void 0, void 0, void 0, 
 }); };
 exports.createWord = createWord;
 var editWord = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, _a, foreignText, translatedText, category, wordsRepo, metaRepo, word, metadata, updatedWord, error_2;
+    var id, _a, foreignText, translatedText, category, wordsRepo, metaRepo_1, word, metadata, updatedWord, error_2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -106,20 +107,20 @@ var editWord = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
                 id = +req.params.id;
                 _a = req.body, foreignText = _a.foreignText, translatedText = _a.translatedText, category = _a.category;
                 wordsRepo = app_data_source_1.myDataSource.getRepository(words_entity_1.Word);
-                metaRepo = app_data_source_1.myDataSource.getRepository(metadata_entity_1.Metadata);
+                metaRepo_1 = app_data_source_1.myDataSource.getRepository(metadata_entity_1.Metadata);
                 return [4 /*yield*/, wordsRepo.findOneBy({ id: id })];
             case 2:
                 word = _b.sent();
                 word.foreignText = foreignText || word.foreignText;
                 word.translatedText = translatedText || word.translatedText;
-                return [4 /*yield*/, metaRepo.findOneBy({ id: word.id })];
+                return [4 /*yield*/, metaRepo_1.findOneBy({ id: word.id })];
             case 3:
                 metadata = _b.sent();
                 metadata.category = category;
                 return [4 /*yield*/, wordsRepo.save(word)];
             case 4:
                 _b.sent();
-                return [4 /*yield*/, metaRepo.save(metadata)];
+                return [4 /*yield*/, metaRepo_1.save(metadata)];
             case 5:
                 _b.sent();
                 return [4 /*yield*/, wordsRepo.findOneBy({ id: id })];
@@ -137,28 +138,39 @@ var editWord = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
 }); };
 exports.editWord = editWord;
 var getWords = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var query, wordsRepo, words, error_3;
+    var query, id, userRepo, user, wordsRepo, words, category, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 console.log('getWords');
                 _a.label = 1;
             case 1:
-                _a.trys.push([1, 3, , 4]);
+                _a.trys.push([1, 6, , 7]);
                 console.log(req.query);
                 query = (0, queryParser_1.queryParser)(req.query);
                 console.log(query);
-                wordsRepo = app_data_source_1.myDataSource.getRepository(words_entity_1.Word);
-                return [4 /*yield*/, wordsRepo.find(__assign({ where: __assign({}, query.find) }, query.service))];
+                id = +req.params.id;
+                userRepo = app_data_source_1.myDataSource.getRepository(user_entity_1.User);
+                return [4 /*yield*/, userRepo.findOneBy({ id: id })];
             case 2:
-                words = _a.sent();
-                res.json({ words: words, query: query });
-                return [3 /*break*/, 4];
+                user = _a.sent();
+                wordsRepo = app_data_source_1.myDataSource.getRepository(words_entity_1.Word);
+                if (!user) return [3 /*break*/, 5];
+                return [4 /*yield*/, wordsRepo.find(__assign({ where: __assign(__assign({}, query.find), { user: user }) }, query.service))];
             case 3:
+                words = _a.sent();
+                return [4 /*yield*/, meta_entity_controller_1.metaRepo.uniqueArrFromField('category')];
+            case 4:
+                category = _a.sent();
+                return [2 /*return*/, res.json({ words: words, query: query, category: category })];
+            case 5:
+                res.json({ words: [], query: query });
+                return [3 /*break*/, 7];
+            case 6:
                 error_3 = _a.sent();
                 console.log('getWords func error ', error_3);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [3 /*break*/, 7];
+            case 7: return [2 /*return*/];
         }
     });
 }); };

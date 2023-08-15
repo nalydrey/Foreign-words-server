@@ -14,7 +14,10 @@ export class Setting {
     pause: number
 
     @Column({default: 20})
-    lastWords: number
+    repeatBy: number
+   
+    @Column({default: 10})
+    learnBy: number
 
     @OneToOne(type => User, user => user.settings, {onDelete: 'CASCADE'})
     @JoinColumn()

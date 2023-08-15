@@ -3,7 +3,7 @@ import {config} from 'dotenv'
 import { User } from "./entity/user.entity"
 import { Word } from "./entity/words.entity"
 import { Metadata } from "./entity/metadata.entity"
-import { Setting } from "./entity/settings"
+import { Setting } from "./entity/settings.entity"
 config()
 
 

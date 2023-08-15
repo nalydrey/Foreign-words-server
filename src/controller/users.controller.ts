@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { myDataSource } from "../app-data-source";
 import { User } from "../entity/user.entity";
-import { Setting } from "../entity/settings";
+import { Setting } from "../entity/settings.entity";
 
 
 
@@ -42,6 +42,10 @@ export const createUser = async(req: Request, res: Response) => {
         
         const usersRepo = myDataSource.getRepository(User)
         const settingRepo = myDataSource.getRepository(Setting)
+        const existedUser =await usersRepo.findOneBy({nikName})
+        if(existedUser){
+            return res.send({user: null})
+        }
         await usersRepo.save(user)
         await settingRepo.save(settings)
 
@@ -83,13 +87,11 @@ export const enterUser = async (req: Request, res: Response) => {
         if(typeof nikName === 'string' && typeof password === 'string' ){
             user = await usersRepo.findOneBy({nikName, password})
         }
-
-        console.log('user',user);
-        
         res.send({user})
         
     } catch (error) {
-        console.log('enterUser func error', error);
+        console.log('enterUser func error ', error);
+        res.send({user: null})
     }
 }
 
@@ -107,6 +109,20 @@ export const getUser = async (req: Request, res: Response) => {
         
     } catch (error) {
         console.log('getUser func error', error);
+    }
+}
+
+export const changeSettings = async (req: Request, res: Response) => {
+    console.log('changeSettings');
+    try {
+        const id = +req.params.id
+        const {timer, pause, repeatBy, learnBy} = req.body
+        const settingsRepo = myDataSource.getRepository(Setting)
+        const setting = await settingsRepo.update(id, {timer, pause, repeatBy, learnBy})
+        res.json({isUpdated: true})
+    } catch (error) {
+        console.log('changeSettings func error', error);
+        res.json({isUpdated: false})
     }
 }
 

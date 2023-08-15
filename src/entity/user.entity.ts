@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinTable, OneToOne, JoinColumn } from "typeorm"
 import { Word } from "./words.entity"
-import { Setting } from "./settings"
+import { Setting } from "./settings.entity"
 
 @Entity()
 export class User {

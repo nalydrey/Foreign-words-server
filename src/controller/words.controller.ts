@@ -4,6 +4,8 @@ import { Word } from "../entity/words.entity"
 import { User } from "../entity/user.entity"
 import { Metadata } from "../entity/metadata.entity"
 import { queryParser } from "../functions/queryParser"
+import { metaRepo } from "../entity-controller/meta.entity.controller"
+
 
 export const createWord = async (req: Request, res: Response) => {
     console.log('createWord')
@@ -29,6 +31,9 @@ export const createWord = async (req: Request, res: Response) => {
         
         await metadataRepo.save(metadata)
         await wordsRepo.save(word)
+
+        
+
         
         res.json({word})
         
@@ -72,17 +77,31 @@ export const getWords = async (req: Request, res: Response) => {
         console.log(req.query);
         const query = queryParser(req.query)
         console.log(query);
-        
-        // const {take, needsToLearn} = req.query
+        const id = +req.params.id
+        const userRepo = myDataSource.getRepository(User)
+        const user = await userRepo.findOneBy({id})
         const wordsRepo = myDataSource.getRepository(Word)
-        const words = await wordsRepo.find({
-            where:{
-                ...query.find
-            },
-            ...query.service
-        })
-        res.json({words, query})
-        
+        if(user){
+            const words = await wordsRepo.find({
+                where:{
+                    ...query.find,
+                    user
+                },
+                ...query.service,
+                
+
+            })
+
+            
+        const category = await metaRepo.uniqueArrFromField('category')
+
+           return res.json({words, query, category})
+        }
+        res.json({words: [], query})
+
+
+
+
     } catch (error) {
         console.log('getWords func error ', error)
     }

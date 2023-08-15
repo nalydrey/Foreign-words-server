@@ -4,7 +4,7 @@ import { createWord, deleteWord, editWord, getWords } from "../controller/words.
 const route = Router()
 
 route.post('/', createWord)
-route.get('/', getWords)
+route.get('/my/:id', getWords)
 route.delete('/:id', deleteWord)
 route.put('/:id', editWord)
 

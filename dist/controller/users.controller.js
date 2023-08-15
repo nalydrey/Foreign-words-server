@@ -36,10 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUser = exports.enterUser = exports.deleteUser = exports.createUser = exports.getUsers = exports.deleteAllUsers = void 0;
+exports.changeSettings = exports.getUser = exports.enterUser = exports.deleteUser = exports.createUser = exports.getUsers = exports.deleteAllUsers = void 0;
 var app_data_source_1 = require("../app-data-source");
 var user_entity_1 = require("../entity/user.entity");
-var settings_1 = require("../entity/settings");
+var settings_entity_1 = require("../entity/settings.entity");
 var deleteAllUsers = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var usersRepo, users, error_1;
     return __generator(this, function (_a) {
@@ -89,39 +89,45 @@ var getUsers = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
 }); };
 exports.getUsers = getUsers;
 var createUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, nikName, password, user, settings, usersRepo, settingRepo, newUser, error_3;
+    var _a, nikName, password, user, settings, usersRepo, settingRepo, existedUser, newUser, error_3;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 console.log('createUser');
                 _b.label = 1;
             case 1:
-                _b.trys.push([1, 5, , 6]);
+                _b.trys.push([1, 6, , 7]);
                 console.log(req.body);
                 _a = req.body, nikName = _a.nikName, password = _a.password;
                 user = new user_entity_1.User();
-                settings = new settings_1.Setting();
+                settings = new settings_entity_1.Setting();
                 user.nikName = nikName;
                 user.password = password;
                 settings.user = user;
                 usersRepo = app_data_source_1.myDataSource.getRepository(user_entity_1.User);
-                settingRepo = app_data_source_1.myDataSource.getRepository(settings_1.Setting);
-                return [4 /*yield*/, usersRepo.save(user)];
+                settingRepo = app_data_source_1.myDataSource.getRepository(settings_entity_1.Setting);
+                return [4 /*yield*/, usersRepo.findOneBy({ nikName: nikName })];
             case 2:
-                _b.sent();
-                return [4 /*yield*/, settingRepo.save(settings)];
+                existedUser = _b.sent();
+                if (existedUser) {
+                    return [2 /*return*/, res.send({ user: null })];
+                }
+                return [4 /*yield*/, usersRepo.save(user)];
             case 3:
                 _b.sent();
-                return [4 /*yield*/, usersRepo.findOneBy({ id: user.id })];
+                return [4 /*yield*/, settingRepo.save(settings)];
             case 4:
+                _b.sent();
+                return [4 /*yield*/, usersRepo.findOneBy({ id: user.id })];
+            case 5:
                 newUser = _b.sent();
                 res.send({ user: newUser });
-                return [3 /*break*/, 6];
-            case 5:
+                return [3 /*break*/, 7];
+            case 6:
                 error_3 = _b.sent();
                 console.log('createUser func error', error_3);
-                return [3 /*break*/, 6];
-            case 6: return [2 /*return*/];
+                return [3 /*break*/, 7];
+            case 7: return [2 /*return*/];
         }
     });
 }); };
@@ -174,12 +180,12 @@ var enterUser = function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 user = _b.sent();
                 _b.label = 3;
             case 3:
-                console.log('user', user);
                 res.send({ user: user });
                 return [3 /*break*/, 5];
             case 4:
                 error_5 = _b.sent();
-                console.log('enterUser func error', error_5);
+                console.log('enterUser func error ', error_5);
+                res.send({ user: null });
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
         }
@@ -213,3 +219,30 @@ var getUser = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
     });
 }); };
 exports.getUser = getUser;
+var changeSettings = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, _a, timer, pause, repeatBy, learnBy, settingsRepo, setting, error_7;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                console.log('changeSettings');
+                _b.label = 1;
+            case 1:
+                _b.trys.push([1, 3, , 4]);
+                id = +req.params.id;
+                _a = req.body, timer = _a.timer, pause = _a.pause, repeatBy = _a.repeatBy, learnBy = _a.learnBy;
+                settingsRepo = app_data_source_1.myDataSource.getRepository(settings_entity_1.Setting);
+                return [4 /*yield*/, settingsRepo.update(id, { timer: timer, pause: pause, repeatBy: repeatBy, learnBy: learnBy })];
+            case 2:
+                setting = _b.sent();
+                res.json({ isUpdated: true });
+                return [3 /*break*/, 4];
+            case 3:
+                error_7 = _b.sent();
+                console.log('changeSettings func error', error_7);
+                res.json({ isUpdated: false });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+exports.changeSettings = changeSettings;
